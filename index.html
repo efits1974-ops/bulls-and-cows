@@ -160,7 +160,7 @@
             color: #1a8a4a;
         }
 
-        /* ===== ВВОД ===== */
+        /* ===== ВВОД (ИСПРАВЛЕНО) ===== */
         .input-area {
             display: flex;
             gap: 10px;
@@ -168,12 +168,13 @@
             align-items: stretch;
         }
         .input-area input {
-            flex: 0 0 140px;
+            flex: 1 1 100%;
+            min-width: 0;
             padding: 0 8px;
-            font-size: 26px;
+            font-size: max(18px, 5vw);
             font-weight: 700;
             text-align: center;
-            letter-spacing: 10px;
+            letter-spacing: max(6px, 2vw);
             border: 2px solid #b8cce0;
             border-radius: 16px;
             background: white;
@@ -262,11 +263,11 @@
             margin: 0 4px;
         }
 
-        /* ===== АДАПТИВ ===== */
+        /* ===== АДАПТИВ (ИСПРАВЛЕНО) ===== */
         @media (max-width: 420px) {
             .container { padding: 18px 14px 20px; }
             .header h1 { font-size: 22px; }
-            .input-area input { flex: 0 0 110px; font-size: 22px; letter-spacing: 8px; height: 54px; }
+            .input-area input { flex: 1 1 100%; font-size: 20px; letter-spacing: 6px; height: 54px; }
             .btn { height: 54px; font-size: 14px; }
             .history-box { height: 170px; font-size: 14px; }
             .status-text { font-size: 13px; }
