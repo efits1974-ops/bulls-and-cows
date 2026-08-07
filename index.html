@@ -168,7 +168,7 @@
             align-items: stretch;
         }
         .input-area input {
-            flex: 1 1 100%;
+            flex: 1;
             min-width: 0;
             padding: 0 8px;
             font-size: max(18px, 5vw);
@@ -181,7 +181,7 @@
             color: #0a1a3a;
             outline: none;
             transition: border 0.2s, box-shadow 0.2s;
-            height: 60px;
+            height: 64px;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
         }
         .input-area input:focus {
@@ -199,15 +199,13 @@
             font-size: 18px;
         }
 
+        /* ===== КНОПКИ (КВАДРАТНЫЕ) ===== */
         .btn-group {
             display: flex;
             gap: 10px;
-            flex: 1;
+            flex: 0 0 auto;
         }
-
-        /* ===== КНОПКИ (УВЕЛИЧЕНЫ) ===== */
         .btn {
-            flex: 1;
             border: none;
             border-radius: 20px;
             font-size: 22px;
@@ -216,12 +214,13 @@
             cursor: pointer;
             transition: all 0.12s;
             touch-action: manipulation;
+            width: 64px;
             height: 64px;
+            min-width: 56px;
             min-height: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
             -webkit-tap-highlight-color: transparent;
         }
         .btn:active {
@@ -266,20 +265,12 @@
             margin: 0 4px;
         }
 
-        /* ===== АДАПТИВ (КНОПКИ УВЕЛИЧЕНЫ) ===== */
+        /* ===== АДАПТИВ ===== */
         @media (max-width: 420px) {
             .container { padding: 18px 14px 20px; }
             .header h1 { font-size: 22px; }
-            .input-area input { flex: 1 1 100%; font-size: 20px; letter-spacing: 6px; height: 54px; }
-
-            /* Кнопки на мобилках */
-            .btn { 
-                height: 60px;
-                font-size: 20px;
-                border-radius: 18px;
-                min-height: 54px;
-            }
-
+            .input-area input { height: 60px; font-size: 20px; letter-spacing: 6px; }
+            .btn { width: 60px; height: 60px; font-size: 20px; border-radius: 18px; min-width: 54px; min-height: 54px; }
             .history-box { height: 170px; font-size: 14px; }
             .status-text { font-size: 13px; }
             .attempts-badge { font-size: 16px; padding: 2px 12px; }
@@ -287,8 +278,9 @@
 
         @media (max-width: 370px) {
             .input-area { flex-wrap: wrap; }
-            .input-area input { flex: 1 1 100%; letter-spacing: 12px; }
-            .btn-group { flex: 1 1 100%; }
+            .input-area input { flex: 1 1 100%; }
+            .btn-group { flex: 1 1 100%; justify-content: center; }
+            .btn { width: 60px; height: 60px; }
         }
 
         @media (prefers-color-scheme: dark) {
@@ -388,7 +380,6 @@
             inputField.value = '';
             inputField.disabled = false;
             guessBtn.disabled = false;
-            // Фокус на поле ввода с небольшой задержкой (для iOS)
             setTimeout(() => inputField.focus(), 100);
         }
 
@@ -411,7 +402,6 @@
 
             const guess = raw.split('').map(Number);
 
-            // Проверка повторов
             const seen = new Set();
             for (const d of guess) {
                 if (seen.has(d)) {
@@ -424,7 +414,6 @@
                 seen.add(d);
             }
 
-            // ===== ПОДСЧЁТ =====
             let bulls = 0, cows = 0;
             const secretMatched = [false, false, false, false];
             const guessMatched = [false, false, false, false];
@@ -453,7 +442,6 @@
             attempts++;
             attemptsLabel.textContent = attempts;
 
-            // ===== ИСТОРИЯ =====
             const entry = document.createElement('div');
             entry.className = 'history-item';
             const guessSpan = document.createElement('span');
@@ -467,14 +455,12 @@
             historyArea.appendChild(entry);
             historyArea.scrollTop = historyArea.scrollHeight;
 
-            // ===== СТАТУС =====
             statusLabel.textContent = `🐂 Быки: ${bulls} | 🐄 Коровы: ${cows}`;
             statusLabel.className = 'status-text';
 
             inputField.value = '';
             setTimeout(() => inputField.focus(), 50);
 
-            // ===== ПОБЕДА =====
             if (bulls === 4) {
                 gameOver = true;
                 inputField.disabled = true;
@@ -482,7 +468,6 @@
                 statusLabel.innerHTML = `🎉 ПОБЕДА! Число ${secretNumber.join('')} за ${attempts} попыток!`;
                 statusLabel.className = 'status-text win';
 
-                // Победная строка в истории
                 const winEntry = document.createElement('div');
                 winEntry.className = 'history-item history-win';
                 const winGuess = document.createElement('span');
@@ -496,14 +481,12 @@
                 historyArea.appendChild(winEntry);
                 historyArea.scrollTop = historyArea.scrollHeight;
 
-                // Всплывашка с задержкой
                 setTimeout(() => {
                     alert(`🎉 Поздравляю!\nВы угадали число ${secretNumber.join('')}\nЗа ${attempts} попыток!`);
                 }, 350);
             }
         }
 
-        // ===== ОБРАБОТЧИКИ =====
         guessBtn.addEventListener('click', checkGuess);
         newGameBtn.addEventListener('click', startNewGame);
 
@@ -514,12 +497,10 @@
             }
         });
 
-        // Ограничение ввода: только цифры, макс 4
         inputField.addEventListener('input', function() {
             this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);
         });
 
-        // Вставка из буфера
         inputField.addEventListener('paste', function(e) {
             e.preventDefault();
             const pasted = (e.clipboardData || window.clipboardData).getData('text');
@@ -527,7 +508,6 @@
             this.value = cleaned;
         });
 
-        // ===== СТАРТ =====
         startNewGame();
     })();
 </script>
