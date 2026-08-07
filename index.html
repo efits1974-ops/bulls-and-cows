@@ -160,7 +160,7 @@
             color: #1a8a4a;
         }
 
-        /* ===== ВВОД (ИСПРАВЛЕНО) ===== */
+        /* ===== ВВОД ===== */
         .input-area {
             display: flex;
             gap: 10px;
@@ -204,17 +204,20 @@
             gap: 10px;
             flex: 1;
         }
+
+        /* ===== КНОПКИ (УВЕЛИЧЕНЫ) ===== */
         .btn {
             flex: 1;
             border: none;
-            border-radius: 16px;
-            font-size: 16px;
+            border-radius: 20px;
+            font-size: 22px;
             font-weight: 700;
             color: white;
             cursor: pointer;
             transition: all 0.12s;
             touch-action: manipulation;
-            height: 60px;
+            height: 64px;
+            min-height: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -263,12 +266,20 @@
             margin: 0 4px;
         }
 
-        /* ===== АДАПТИВ (ИСПРАВЛЕНО) ===== */
+        /* ===== АДАПТИВ (КНОПКИ УВЕЛИЧЕНЫ) ===== */
         @media (max-width: 420px) {
             .container { padding: 18px 14px 20px; }
             .header h1 { font-size: 22px; }
             .input-area input { flex: 1 1 100%; font-size: 20px; letter-spacing: 6px; height: 54px; }
-            .btn { height: 54px; font-size: 14px; }
+
+            /* Кнопки на мобилках */
+            .btn { 
+                height: 60px;
+                font-size: 20px;
+                border-radius: 18px;
+                min-height: 54px;
+            }
+
             .history-box { height: 170px; font-size: 14px; }
             .status-text { font-size: 13px; }
             .attempts-badge { font-size: 16px; padding: 2px 12px; }
