@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Быки и Коровы">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐂</text></svg>">
+    <title>Быки и Коровы</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(145deg, #0a1a3a, #1a3a6a);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            touch-action: manipulation;
+            background-attachment: fixed;
+        }
+
+        /* ===== КОНТЕЙНЕР ===== */
+        .container {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 32px;
+            padding: 24px 20px 28px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.2s;
+        }
+
+        /* ===== ЗАГОЛОВОК ===== */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        .header h1 {
+            font-size: 26px;
+            font-weight: 800;
+            color: #0a1a3a;
+            letter-spacing: -0.5px;
+        }
+        .header .emoji-big {
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 13px;
+            color: #6a7a9a;
+            font-weight: 500;
+            margin-bottom: 16px;
+            letter-spacing: 0.2px;
+        }
+
+        /* ===== СТАТУС-БАР ===== */
+        .status-bar {
+            background: #f0f5fe;
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #dce6f2;
+            min-height: 54px;
+        }
+        .status-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: #0a1a3a;
+            flex: 1;
+            line-height: 1.3;
+        }
+        .status-text.win {
+            color: #1a8a4a;
+        }
+        .status-text.error {
+            color: #c0392b;
+        }
+        .attempts-badge {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a3a6a;
+            background: white;
+            padding: 4px 16px;
+            border-radius: 30px;
+            border: 1px solid #b8cce0;
+            white-space: nowrap;
+            margin-left: 10px;
+            min-width: 36px;
+            text-align: center;
+        }
+
+        /* ===== ИСТОРИЯ ===== */
+        .history-box {
+            background: #f8fafd;
+            border-radius: 16px;
+            padding: 12px 14px;
+            height: 220px;
+            overflow-y: auto;
+            margin-bottom: 14px;
+            border: 1px solid #dce6f2;
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.8;
+            color: #0a1a3a;
+            -webkit-overflow-scrolling: touch;
+        }
+        .history-box::-webkit-scrollbar {
+            width: 4px;
+        }
+        .history-box::-webkit-scrollbar-thumb {
+            background: #b8cce0;
+            border-radius: 10px;
+        }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 0;
+            border-bottom: 1px solid #e8eef6;
+        }
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        .history-guess {
+            font-weight: 600;
+            color: #0a1a3a;
+        }
+        .history-result {
+            font-weight: 600;
+        }
+        .bull-count { color: #d35400; }
+        .cow-count { color: #2980b9; }
+        .history-win {
+            color: #1a8a4a;
+            font-weight: 700;
+        }
+        .history-win .history-guess {
+            color: #1a8a4a;
+        }
+
+        /* ===== ВВОД ===== */
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: stretch;
+        }
+        .input-area input {
+            flex: 0 0 140px;
+            padding: 0 8px;
+            font-size: 26px;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 10px;
+            border: 2px solid #b8cce0;
+            border-radius: 16px;
+            background: white;
+            color: #0a1a3a;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+            height: 60px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+        }
+        .input-area input:focus {
+            border-color: #1a3a6a;
+            box-shadow: 0 0 0 4px rgba(26, 58, 106, 0.15);
+        }
+        .input-area input:disabled {
+            opacity: 0.4;
+            background: #f0f0f0;
+        }
+        .input-area input::placeholder {
+            letter-spacing: 4px;
+            font-weight: 400;
+            color: #b0b8c8;
+            font-size: 18px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+        }
+        .btn {
+            flex: 1;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: all 0.12s;
+            touch-action: manipulation;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn:active {
+            transform: scale(0.94);
+        }
+        .btn-primary {
+            background: linear-gradient(145deg, #1a3a6a, #0a1a3a);
+        }
+        .btn-primary:active {
+            background: #0a1a3a;
+        }
+        .btn-primary:disabled {
+            opacity: 0.4;
+            transform: none;
+        }
+        .btn-success {
+            background: linear-gradient(145deg, #27ae60, #1a7a44);
+        }
+        .btn-success:active {
+            background: #1a6a3a;
+        }
+        .btn-danger {
+            background: linear-gradient(145deg, #e67e22, #c0392b);
+        }
+        .btn-danger:active {
+            background: #a03224;
+        }
+
+        /* ===== ПОДСКАЗКА ===== */
+        .footer-tip {
+            text-align: center;
+            font-size: 12px;
+            color: #8a9aaa;
+            margin-top: 12px;
+            border-top: 1px solid #e8eef6;
+            padding-top: 12px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+        .footer-tip span {
+            display: inline-block;
+            margin: 0 4px;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 420px) {
+            .container { padding: 18px 14px 20px; }
+            .header h1 { font-size: 22px; }
+            .input-area input { flex: 0 0 110px; font-size: 22px; letter-spacing: 8px; height: 54px; }
+            .btn { height: 54px; font-size: 14px; }
+            .history-box { height: 170px; font-size: 14px; }
+            .status-text { font-size: 13px; }
+            .attempts-badge { font-size: 16px; padding: 2px 12px; }
+        }
+
+        @media (max-width: 370px) {
+            .input-area { flex-wrap: wrap; }
+            .input-area input { flex: 1 1 100%; letter-spacing: 12px; }
+            .btn-group { flex: 1 1 100%; }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body { background: linear-gradient(145deg, #0a0a1a, #1a1a3a); }
+            .container { background: rgba(20, 25, 40, 0.97); border-color: rgba(255,255,255,0.08); }
+            .header h1 { color: #e8eeff; }
+            .subtitle { color: #8a9aba; }
+            .status-bar { background: #1a2240; border-color: #2a3a5a; }
+            .status-text { color: #d0d8ee; }
+            .attempts-badge { background: #0a1a2a; color: #b0c8e8; border-color: #2a4a6a; }
+            .history-box { background: #121a30; border-color: #2a3a5a; color: #d0d8ee; }
+            .history-item { border-color: #2a3a5a; }
+            .history-guess { color: #d0d8ee; }
+            .input-area input { background: #0a1a2a; border-color: #2a4a6a; color: #e8eeff; }
+            .input-area input:focus { border-color: #4a7aaa; box-shadow: 0 0 0 4px rgba(74, 122, 170, 0.2); }
+            .input-area input::placeholder { color: #4a5a7a; }
+            .footer-tip { border-color: #2a3a5a; color: #6a7a9a; }
+            .btn-primary { background: linear-gradient(145deg, #2a4a7a, #1a2a4a); }
+            .history-win { color: #4ac080; }
+            .history-win .history-guess { color: #4ac080; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Заголовок -->
+    <div class="header">
+        <h1>Быки &amp; Коровы</h1>
+        <span class="emoji-big">🐂</span>
+    </div>
+    <div class="subtitle">Угадай 4-значное число без повторов</div>
+
+    <!-- Статус -->
+    <div class="status-bar">
+        <span class="status-text" id="statusLabel">🎯 Введите число</span>
+        <span class="attempts-badge" id="attemptsLabel">0</span>
+    </div>
+
+    <!-- История -->
+    <div class="history-box" id="historyArea"></div>
+
+    <!-- Ввод -->
+    <div class="input-area">
+        <input type="text" id="inputField" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="____">
+        <div class="btn-group">
+            <button class="btn btn-primary" id="guessBtn">🔍</button>
+            <button class="btn btn-success" id="newGameBtn">🔄</button>
+        </div>
+    </div>
+
+    <div class="footer-tip">
+        <span>❶</span> Цифры не повторяются <span>•</span> <span>❷</span> Первая не ноль
+    </div>
+</div>
+
+<script>
+    (function() {
+        "use strict";
+
+        // ===== СОСТОЯНИЕ =====
+        let secretNumber = [];
+        let attempts = 0;
+        let gameOver = false;
+
+        // ===== DOM =====
+        const inputField = document.getElementById('inputField');
+        const guessBtn = document.getElementById('guessBtn');
+        const newGameBtn = document.getElementById('newGameBtn');
+        const statusLabel = document.getElementById('statusLabel');
+        const attemptsLabel = document.getElementById('attemptsLabel');
+        const historyArea = document.getElementById('historyArea');
+
+        // ===== ГЕНЕРАЦИЯ ЧИСЛА =====
+        function generateSecret() {
+            const digits = [0,1,2,3,4,5,6,7,8,9];
+            for (let i = digits.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [digits[i], digits[j]] = [digits[j], digits[i]];
+            }
+            if (digits[0] === 0) {
+                const swapIdx = digits.findIndex(d => d !== 0);
+                [digits[0], digits[swapIdx]] = [digits[swapIdx], digits[0]];
+            }
+            return digits.slice(0, 4);
+        }
+
+        // ===== НОВАЯ ИГРА =====
+        function startNewGame() {
+            secretNumber = generateSecret();
+            attempts = 0;
+            gameOver = false;
+            attemptsLabel.textContent = '0';
+            statusLabel.textContent = '🎯 Игра начата! Введите 4 цифры.';
+            statusLabel.className = 'status-text';
+            historyArea.innerHTML = '';
+            inputField.value = '';
+            inputField.disabled = false;
+            guessBtn.disabled = false;
+            // Фокус на поле ввода с небольшой задержкой (для iOS)
+            setTimeout(() => inputField.focus(), 100);
+        }
+
+        // ===== ПРОВЕРКА =====
+        function checkGuess() {
+            if (gameOver) {
+                statusLabel.textContent = '⛔ Игра окончена. Начните новую.';
+                statusLabel.className = 'status-text error';
+                return;
+            }
+
+            const raw = inputField.value.trim();
+            if (raw.length !== 4 || !/^\d{4}$/.test(raw)) {
+                statusLabel.textContent = '⚠️ Введите ровно 4 цифры!';
+                statusLabel.className = 'status-text error';
+                inputField.value = '';
+                setTimeout(() => inputField.focus(), 50);
+                return;
+            }
+
+            const guess = raw.split('').map(Number);
+
+            // Проверка повторов
+            const seen = new Set();
+            for (const d of guess) {
+                if (seen.has(d)) {
+                    statusLabel.textContent = '⚠️ Цифры не должны повторяться!';
+                    statusLabel.className = 'status-text error';
+                    inputField.value = '';
+                    setTimeout(() => inputField.focus(), 50);
+                    return;
+                }
+                seen.add(d);
+            }
+
+            // ===== ПОДСЧЁТ =====
+            let bulls = 0, cows = 0;
+            const secretMatched = [false, false, false, false];
+            const guessMatched = [false, false, false, false];
+
+            for (let i = 0; i < 4; i++) {
+                if (guess[i] === secretNumber[i]) {
+                    bulls++;
+                    secretMatched[i] = true;
+                    guessMatched[i] = true;
+                }
+            }
+
+            for (let i = 0; i < 4; i++) {
+                if (guessMatched[i]) continue;
+                for (let j = 0; j < 4; j++) {
+                    if (secretMatched[j] || guessMatched[i]) continue;
+                    if (guess[i] === secretNumber[j]) {
+                        cows++;
+                        secretMatched[j] = true;
+                        guessMatched[i] = true;
+                        break;
+                    }
+                }
+            }
+
+            attempts++;
+            attemptsLabel.textContent = attempts;
+
+            // ===== ИСТОРИЯ =====
+            const entry = document.createElement('div');
+            entry.className = 'history-item';
+            const guessSpan = document.createElement('span');
+            guessSpan.className = 'history-guess';
+            guessSpan.textContent = `${attempts}) ${raw}`;
+            const resultSpan = document.createElement('span');
+            resultSpan.className = 'history-result';
+            resultSpan.innerHTML = `🐂 <span class="bull-count">${bulls}</span>  🐄 <span class="cow-count">${cows}</span>`;
+            entry.appendChild(guessSpan);
+            entry.appendChild(resultSpan);
+            historyArea.appendChild(entry);
+            historyArea.scrollTop = historyArea.scrollHeight;
+
+            // ===== СТАТУС =====
+            statusLabel.textContent = `🐂 Быки: ${bulls} | 🐄 Коровы: ${cows}`;
+            statusLabel.className = 'status-text';
+
+            inputField.value = '';
+            setTimeout(() => inputField.focus(), 50);
+
+            // ===== ПОБЕДА =====
+            if (bulls === 4) {
+                gameOver = true;
+                inputField.disabled = true;
+                guessBtn.disabled = true;
+                statusLabel.innerHTML = `🎉 ПОБЕДА! Число ${secretNumber.join('')} за ${attempts} попыток!`;
+                statusLabel.className = 'status-text win';
+
+                // Победная строка в истории
+                const winEntry = document.createElement('div');
+                winEntry.className = 'history-item history-win';
+                const winGuess = document.createElement('span');
+                winGuess.className = 'history-guess';
+                winGuess.textContent = '🏆 ПОБЕДА!';
+                const winResult = document.createElement('span');
+                winResult.className = 'history-result';
+                winResult.textContent = `🎉 ${secretNumber.join('')}`;
+                winEntry.appendChild(winGuess);
+                winEntry.appendChild(winResult);
+                historyArea.appendChild(winEntry);
+                historyArea.scrollTop = historyArea.scrollHeight;
+
+                // Всплывашка с задержкой
+                setTimeout(() => {
+                    alert(`🎉 Поздравляю!\nВы угадали число ${secretNumber.join('')}\nЗа ${attempts} попыток!`);
+                }, 350);
+            }
+        }
+
+        // ===== ОБРАБОТЧИКИ =====
+        guessBtn.addEventListener('click', checkGuess);
+        newGameBtn.addEventListener('click', startNewGame);
+
+        inputField.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkGuess();
+            }
+        });
+
+        // Ограничение ввода: только цифры, макс 4
+        inputField.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);
+        });
+
+        // Вставка из буфера
+        inputField.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const pasted = (e.clipboardData || window.clipboardData).getData('text');
+            const cleaned = pasted.replace(/[^0-9]/g, '').slice(0, 4);
+            this.value = cleaned;
+        });
+
+        // ===== СТАРТ =====
+        startNewGame();
+    })();
+</script>
+</body>
+</html>
